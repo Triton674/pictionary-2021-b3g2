@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pictionary game</title>
+</head>
+<body>
+	<h1>Hello world</h1>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js"></script>
+	<script>
+		function setup (){
+			createCanvas(500,500);
+		}
+		function mouseDragged(){
+			line(pmouseX, pmouseY, mouseX, mouseY);
+			
+		}
+	</script>
+</body>
+</html>
