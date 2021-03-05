@@ -18,6 +18,10 @@
 			color
 			<input type="color" class="color">
 		</label>
+		<label>
+			stroke weight:
+			<input type="range" min="1" max="100" value="4" class="weight">
+		</label>
 	</form>
 	<ul class="users">
 		<li></li>
@@ -34,6 +38,7 @@
 
 		const usersList = document.querySelector('.users');
 		const colorInput = document.querySelector('.color');
+		const weightInput = document.querySelector('.weight');
 		socket.on('users', (data) =>{
 			usersList.innerHTML = "";
 			data.forEach((user) =>{
@@ -57,6 +62,7 @@
 		}
 		function mouseDragged(){
 			if(!canDraw) return;
+			strokeWeight(weightInput.value);
 			stroke(colorInput.value);
 			line(pmouseX, pmouseY, mouseX, mouseY);
 
@@ -65,11 +71,13 @@
 				pmouseY,
 				mouseX,
 				mouseY,
-				color: colorInput.value
+				color: colorInput.value,
+				weight: weightInput.value
 			});
 		}
 		socket.on('line', (data) =>{
 			stroke(data.color);
+			strokeWeight(data.weight);
 			line(data.pmouseX, data.pmouseY, data.mouseX, data.mouseY);
 		});
 		socket.on('clear', () =>{
