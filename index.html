@@ -1,20 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="FR">
 <head>
 	<title>Pictionary game</title>
+	<style>
+		canvas{
+			border: 1px solid blue;
+		}
+		li.is-active{
+			font-weight: bold;
+		}
+	</style>
 </head>
 <body>
 	<h1>Hello world</h1>
-
+	<ul class="users">
+		<li></li>
+	</ul>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+
 	<script>
+		const socket = io();
+		const username = prompt('What is your username');
+		socket.emit('username', username)
+
+		let canDraw = false;
+
+		const usersList = document.querySelector('.users');
+		socket.on('users', (data) =>{
+			usersList.innerHTML = "";
+			data.forEach((user) =>{
+				const li = document.createElement('li');
+				li.innerHTML = user.username;
+				if(user.active){
+					li.classList.add('is-active');
+
+
+				}
+				usersList.appendChild(li);
+				if(username === user.username){
+						//attention donner id unique aux usernames
+						candDraw = user.active;
+					}
+			});
+		});
+
 		function setup (){
 			createCanvas(500,500);
 		}
 		function mouseDragged(){
+			if(!canDraw) return;
 			line(pmouseX, pmouseY, mouseX, mouseY);
-			
+
+			socket.emit('line', {
+				pmouseX,
+				pmouseY,
+				mouseX,
+				mouseY
+			});
 		}
+		socket.on('line', (data) =>{
+			line(data.pmouseX, data.pmouseY, data.mouseX, data.mouseY);
+		});
+		socket.on('clear', () =>{
+
+		})
 	</script>
 </body>
 </html>
