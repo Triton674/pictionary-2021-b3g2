@@ -38,6 +38,9 @@ io.on('connection', (socket) =>{
 			return user !== socket;
 		});
 		sendUsers();
+		if(users.length === 0){
+			timeout = clearTimeout(timeout);
+		}
 	});
 
 	socket.on('line', (data) =>{
@@ -53,13 +56,16 @@ function sendUsers(){
 		}
 	}));
 }
-
+var words=["salut", "commentva?", 'bienoubien']
 function switchPlayer(){
 	const indexCurrentPlayer = users.indexOf(currentPlayer);
 	currentPlayer = users[(indexCurrentPlayer + 1) % users.length]
 	// Apres le dernier joueur on retourne au premier
 	sendUsers();
-
+	
+	const nextWord = words[Math.floor(Math.random()* words.length)];
+	currentPlayer.emit('word', nextWord);
+	io.emit('clear')
 	timeout = setTimeout(switchPlayer, 15000);
 
 }
