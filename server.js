@@ -1,7 +1,7 @@
 const express = require('express');
 const socketIO = require('socket.io');
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 const index = '/index.html';
 const server = express().use((req, res) => {
 	res.sendFile(index, { root: __dirname})
